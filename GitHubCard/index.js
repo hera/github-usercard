@@ -56,20 +56,15 @@ function displayUser (url) {
 		.then (response => {
 			let card = createCard(response.data);
 			displayCard(card);
-			console.log(card);
-			return response.data.followers_url;
-		})
-		.then(followersUrl => {
-			return axios.get(followersUrl);
+
+			return axios.get(response.data.followers_url);
 		})
 		.then((response) => {
 			for (let user of response.data) {
-				axios.get(user.url)
-					.then((response) => {
-						let card = createCard(response.data);
-						displayCard(card);
-						console.log(card);
-					});
+				axios.get(user.url).then((response) => {
+					let card = createCard(response.data);
+					displayCard(card);
+				});
 			}
 		})
 		.catch(error => {
