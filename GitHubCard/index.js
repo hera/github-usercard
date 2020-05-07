@@ -50,11 +50,73 @@ const followersArray = [];
     </div>
 */
 
-/*
-  List of LS Instructors Github username's:
-    tetondan
-    dustinmyers
-    justsml
-    luishrd
-    bigknell
-*/
+axios.get('https://api.github.com/users/hera')
+	.then (response => {
+		let card = createCard(response.data);
+		displayCard(card);
+	})
+	.catch(error => {
+		console.log(error);
+	});
+
+
+
+function createCard (user) {
+
+	// main card div
+	let card = document.createElement('div');
+	card.classList.add('card');
+
+	let img = document.createElement('img');
+	img.setAttribute('src', user.avatar_url);
+	card.appendChild(img);
+
+	let cardInfo = document.createElement('div');
+	cardInfo.classList.add('card-info');
+	card.appendChild(cardInfo);
+
+	// card info
+
+	let h3 = document.createElement('h3');
+	h3.classList.add('name');
+	h3.textContent = user.name;
+	cardInfo.appendChild(h3);
+
+	let userName = document.createElement('p');
+	userName.classList.add('username');
+	userName.textContent = user.login;
+	cardInfo.appendChild(userName);
+
+	let location = document.createElement('p');
+	location.textContent = user.location;
+	cardInfo.appendChild(location);
+
+	let profile = document.createElement('p');
+	let profileLink = document.createElement('a');
+	profileLink.setAttribute('href', user.html_url);
+	profileLink.textContent = user.html_url;
+	profile.appendChild(profileLink);
+	cardInfo.appendChild(profile);
+
+
+	let followers = document.createElement('p');
+	followers.textContent = `Followers: ${user.followers}`;
+	cardInfo.appendChild(followers);
+
+	let following = document.createElement('p');
+	following.textContent = `Following: ${user.following}`;
+	cardInfo.appendChild(following);
+
+	let bio = document.createElement('p');
+	bio.textContent = user.bio || "No biography";
+	cardInfo.appendChild(bio);
+
+
+	return card;
+}
+
+function displayCard (card) {
+	let cards = document.querySelector('.cards');
+	cards.appendChild(card);
+}
+
