@@ -28,8 +28,6 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
-
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
     Using DOM methods and properties, create and return the following markup:
@@ -50,14 +48,34 @@ const followersArray = [];
     </div>
 */
 
-axios.get('https://api.github.com/users/hera')
-	.then (response => {
-		let card = createCard(response.data);
-		displayCard(card);
-	})
-	.catch(error => {
-		console.log(error);
-	});
+
+displayUser('https://api.github.com/users/hera');
+
+function displayUser (url) {
+	axios.get(url)
+		.then (response => {
+			let card = createCard(response.data);
+			displayCard(card);
+			console.log(card);
+			return response.data.followers_url;
+		})
+		.then(followersUrl => {
+			return axios.get(followersUrl);
+		})
+		.then((response) => {
+			for (let user of response.data) {
+				axios.get(user.url)
+					.then((response) => {
+						let card = createCard(response.data);
+						displayCard(card);
+						console.log(card);
+					});
+			}
+		})
+		.catch(error => {
+			console.log(error);
+		});
+}
 
 
 
